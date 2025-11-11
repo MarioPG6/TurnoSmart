@@ -10,7 +10,7 @@
         <template v-if="userRole === 'CLIENTE'"></template>
 
         <!-- TRABAJADOR -->
-        <template v-if="userRole === 'TRABAJADOR'"></template>
+        <template v-if="userRole === 'OPERADOR'"></template>
 
         <!-- ADMINISTRADOR -->
         <template v-if="userRole === 'ADMINISTRADOR'"></template>

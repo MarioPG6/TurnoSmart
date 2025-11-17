@@ -1,4 +1,4 @@
-package jwt.demo.jwt.Administrador;
+package jwt.demo.jwt.administrador;
 
 import java.util.List;
 

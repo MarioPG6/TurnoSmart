@@ -1,4 +1,4 @@
-package jwt.demo.jwt.Administrador;
+package jwt.demo.jwt.administrador;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

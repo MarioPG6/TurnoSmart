@@ -19,7 +19,7 @@
 <script setup>
 import { reactive, ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "../../services/authService";
+import { login } from "@/services/authService";
 
 const router = useRouter();
 
@@ -35,22 +35,17 @@ const messageClass = computed(() => (isSuccess.value ? "success" : "error"));
 
 async function handleLogin() {
   try {
-    const res = await login(credentials);
-    if (res.token) {
-      localStorage.setItem("token", res.token);
-      isSuccess.value = true;
-      message.value = "Inicio de sesión exitoso";
+    const user = await login(credentials); // ← Ya devuelve el usuario decodificado
 
-      // Redirigir al home tras un pequeño delay
-      setTimeout(() => {
-        router.push("/").then(() => {
-          window.location.reload();
-        });
-      }, 1000);
-    } else {
-      isSuccess.value = false;
-      message.value = "Credenciales incorrectas";
-    }
+    isSuccess.value = true;
+    message.value = "Inicio de sesión exitoso";
+
+   setTimeout(() => {
+  router.push("/").then(() => {
+    window.location.reload();   
+  });
+}, 1000);
+
   } catch (err) {
     console.error("Error en login:", err);
     isSuccess.value = false;
@@ -58,6 +53,7 @@ async function handleLogin() {
   }
 }
 </script>
+
 
 <style scoped>
 .container {

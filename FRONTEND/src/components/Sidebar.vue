@@ -4,8 +4,6 @@
 
     <ul class="list">
       <template v-if="isAuthenticated">
-        <li><RouterLink to="/profile">Cuenta</RouterLink></li>
-
         <!-- CLIENTE -->
         <template v-if="userRole === 'CLIENTE'"></template>
 
@@ -13,7 +11,9 @@
         <template v-if="userRole === 'OPERADOR'"></template>
 
         <!-- ADMINISTRADOR -->
-        <template v-if="userRole === 'ADMINISTRADOR'"></template>
+        <template v-if="userRole === 'ADMINISTRADOR'">
+          <li><RouterLink to="/admin/negocios">Negocios</RouterLink></li>
+        </template>
       </template>
     </ul>
   </div>
@@ -92,7 +92,11 @@ function logout() {
 }
 
 .sidebar {
-  background: linear-gradient(180deg, var(--brand-dark-blue), var(--brand-blue));
+  background: linear-gradient(
+    180deg,
+    var(--brand-dark-blue),
+    var(--brand-blue)
+  );
   color: var(--text-light);
   padding: 16px 12px;
   height: 100%;

@@ -24,7 +24,7 @@
 <script setup>
 import { reactive, ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { register } from "../../services/authService";
+import { register } from "@/services/authService";
 
 const router = useRouter();
 
@@ -51,18 +51,15 @@ async function handleRegister() {
   }
 
   try {
-    const res = await register(form);
+    await register(form); // ← se registra, no devuelve token
 
-    if (res.token) {
-      isSuccess.value = true;
-      message.value = "Registro exitoso. Redirigiendo...";
-      setTimeout(() => {
-        router.push("/login");
-      }, 1200);
-    } else {
-      isSuccess.value = false;
-      message.value = "Error en el registro";
-    }
+    isSuccess.value = true;
+    message.value = "Registro exitoso. Redirigiendo...";
+
+    setTimeout(() => {
+      router.push("/login");
+    }, 1200);
+
   } catch (err) {
     console.error("Error en registro:", err);
     isSuccess.value = false;
@@ -70,6 +67,7 @@ async function handleRegister() {
   }
 }
 </script>
+
 
 <style scoped>
 .container {

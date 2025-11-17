@@ -1,24 +1,37 @@
+import { jwtDecode } from "jwt-decode";
+
 const API_URL = "http://localhost:8080/auth";
 
+// -------------------- LOGIN --------------------
 export async function login(credentials) {
   const response = await fetch(`${API_URL}/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(credentials)
+    body: JSON.stringify(credentials),
   });
 
   if (!response.ok) throw new Error("Error en login");
 
   const data = await response.json();
+
+  // Guardar token en localStorage
   localStorage.setItem("token", data.token);
-  return data;
+
+  // Decodificar el token
+  const decoded = jwtDecode(data.token);
+
+  // Guardar datos del usuario
+  localStorage.setItem("user", JSON.stringify(decoded));
+
+  return decoded;
 }
 
+// -------------------- REGISTER --------------------
 export async function register(form) {
   const response = await fetch(`${API_URL}/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(form)
+    body: JSON.stringify(form),
   });
 
   if (!response.ok) throw new Error("Error en registro");
@@ -26,19 +39,37 @@ export async function register(form) {
   return await response.json();
 }
 
-export async function getCurrentUser() {
+// -------------------- GET CURRENT USER --------------------
+export function getCurrentUser() {
   const token = localStorage.getItem("token");
   if (!token) return null;
 
-  const response = await fetch(`${API_URL}/info`, {
-    headers: {
-      "Authorization": `Bearer ${token}`
+  try {
+    const decoded = jwtDecode(token);
+
+    // si el token expiró
+    if (decoded.exp * 1000 < Date.now()) {
+      logout();
+      return null;
     }
-  });
 
-  if (!response.ok) {
-    throw new Error("Error obteniendo usuario");
+    return decoded; // devuelve: id, email, role
+  } catch (e) {
+    logout();
+    return null;
   }
+}
 
-  return await response.json();
+// -------------------- LOGOUT --------------------
+export function logout() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+}
+
+// -------------------- GET AUTH HEADERS --------------------
+export function authHeaders() {
+  const token = localStorage.getItem("token");
+  return token
+    ? { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
+    : { "Content-Type": "application/json" };
 }

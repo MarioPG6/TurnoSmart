@@ -3,16 +3,26 @@
     <div class="head">Menú</div>
 
     <ul class="list">
+      <!-- AUTENTICADO -->
       <template v-if="isAuthenticated">
+
         <!-- CLIENTE -->
-        <template v-if="userRole === 'CLIENTE'"></template>
+        <template v-if="userRole === 'CLIENTE'">
+          <li><RouterLink to="/">Inicio</RouterLink></li>
+          <li><RouterLink to="/cliente/negocios">Negocios</RouterLink></li>
+          <li><RouterLink to="/cliente/citas">Mis Citas</RouterLink></li>
+        </template>
 
-        <!-- TRABAJADOR -->
-        <template v-if="userRole === 'OPERADOR'"></template>
+        <!-- OPERADOR -->
+        <template v-else-if="userRole === 'OPERADOR'">
+          <li><RouterLink to="/">Inicio</RouterLink></li>
+        </template>
 
-        <!-- ADMINISTRADOR -->
-        <template v-if="userRole === 'ADMINISTRADOR'">
+        <!-- ADMIN -->
+        <template v-else-if="userRole === 'ADMINISTRADOR'">
+          <li><RouterLink to="/">Inicio</RouterLink></li>
           <li><RouterLink to="/admin/negocios">Negocios</RouterLink></li>
+          <li><RouterLink to="/admin/citas">Citas Asignadas</RouterLink></li>
         </template>
       </template>
     </ul>
@@ -23,21 +33,6 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { getCurrentUser } from "../services/authService.js";
-
-import {
-  Home,
-  LogIn,
-  UserPlus,
-  User,
-  LogOut,
-  MapPin,
-  Package,
-  Truck,
-  Boxes,
-  AlertTriangle,
-  Users,
-  BarChart2,
-} from "lucide-vue-next";
 
 const router = useRouter();
 const isAuthenticated = ref(false);
@@ -57,6 +52,7 @@ async function applyAuth() {
 function onAuthChanged() {
   applyAuth();
 }
+
 function onStorage(e) {
   if (e.key === "token") applyAuth();
 }
@@ -82,7 +78,6 @@ function logout() {
 </script>
 
 <style scoped>
-/* 🎨 Paleta basada en el logo */
 :root {
   --brand-blue: #1e88e5;
   --brand-dark-blue: #0d47a1;
@@ -92,11 +87,7 @@ function logout() {
 }
 
 .sidebar {
-  background: linear-gradient(
-    180deg,
-    var(--brand-dark-blue),
-    var(--brand-blue)
-  );
+  background: linear-gradient(180deg, var(--brand-dark-blue), var(--brand-blue));
   color: var(--text-light);
   padding: 16px 12px;
   height: 100%;
@@ -141,14 +132,16 @@ a:hover {
   background: none;
   border: 0;
   color: #ffccbc;
-  padding: 0;
-  font: inherit;
+  padding: 8px 10px;
   cursor: pointer;
   text-align: left;
-  transition: color 0.25s;
+  border-radius: 6px;
+  width: 100%;
+  transition: 0.25s;
 }
+
 .logout-link:hover {
   color: var(--brand-orange);
-  text-decoration: underline;
+  background: var(--hover-bg);
 }
 </style>

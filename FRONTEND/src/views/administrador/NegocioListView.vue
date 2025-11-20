@@ -32,6 +32,7 @@
             <td class="text-center">
               <button class="btn-edit" @click="goEdit(neg.id)">Editar</button>
               <button class="btn-delete" @click="goDelete(neg.id)">Eliminar</button>
+              <button class="btn-secondary" @click="goCitas(neg.id)">Ver Citas</button>
             </td>
           </tr>
         </tbody>
@@ -74,7 +75,13 @@ function goDelete(id) {
     router.push(`/admin/negocios/eliminar/${id}`);
   }
 }
+
+function goCitas(id) {
+  localStorage.setItem("negocioId", id);
+  router.push("/admin/citas");
+}
 </script>
+
 
 <style scoped>
 /* ----------- Mismos estilos que en Crear Negocio ----------- */

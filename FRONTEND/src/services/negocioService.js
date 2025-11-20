@@ -2,9 +2,20 @@ import { authHeaders } from "./authService";
 
 const API_URL = "http://localhost:8080/negocios";
 
-/* --------------------------------------
-   OBTENER NEGOCIOS DEL USUARIO
----------------------------------------*/
+// Obtener TODOS los negocios
+export async function obtenerTodosNegocios() {
+  const response = await fetch(`${API_URL}`, {
+    headers: authHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error obteniendo negocios");
+  }
+
+  return await response.json();
+}
+
+// Obtener negocios por usuario
 export async function obtenerNegociosPorUsuario(userId) {
   const response = await fetch(`${API_URL}/usuario/${userId}`, {
     headers: authHeaders(),
@@ -17,9 +28,7 @@ export async function obtenerNegociosPorUsuario(userId) {
   return await response.json();
 }
 
-/* --------------------------------------
-   CREAR NEGOCIO
----------------------------------------*/
+// Crear negocio
 export async function crearNegocio(userId, data) {
   const response = await fetch(`${API_URL}/crear/${userId}`, {
     method: "POST",
@@ -34,9 +43,7 @@ export async function crearNegocio(userId, data) {
   return await response.json();
 }
 
-/* --------------------------------------
-   OBTENER NEGOCIO POR ID
----------------------------------------*/
+// Obtener negocio por ID
 export async function obtenerNegocioPorId(id) {
   const response = await fetch(`${API_URL}/${id}`, {
     headers: authHeaders(),
@@ -49,9 +56,7 @@ export async function obtenerNegocioPorId(id) {
   return await response.json();
 }
 
-/* --------------------------------------
-   ACTUALIZAR NEGOCIO
----------------------------------------*/
+// Actualizar negocio
 export async function actualizarNegocio(id, data) {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
@@ -66,11 +71,9 @@ export async function actualizarNegocio(id, data) {
   return await response.json();
 }
 
-/* --------------------------------------
-   ELIMINAR NEGOCIO
----------------------------------------*/
+// Eliminar negocio
 export async function eliminarNegocio(id) {
-  const response = await fetch(`${API_URL}/eliminar/${id}`, {
+  const response = await fetch(`${API_URL}/${id}`, {
     method: "DELETE",
     headers: authHeaders(),
   });

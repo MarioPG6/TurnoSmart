@@ -10,6 +10,7 @@ import jwt.demo.jwt.User.UserRepository;
 import jwt.demo.jwt.administrador.Negocio;
 import jwt.demo.jwt.administrador.NegocioRepository;
 import jwt.demo.jwt.cliente.DTO.CrearCitaDTO;
+import jwt.demo.jwt.cliente.DTO.EditarCitaDTO;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -64,4 +65,20 @@ public class CitaService {
         cita.setEstado(nuevoEstado);
         return citaRepo.save(cita);
     }
+
+    @SuppressWarnings("null")
+    public Cita editarCita(Integer idCita, EditarCitaDTO dto) {
+        Cita cita = citaRepo.findById(idCita)
+                .orElseThrow(() -> new RuntimeException("Cita no encontrada"));
+
+        if (dto.getRazon() != null)
+            cita.setRazon(dto.getRazon());
+        if (dto.getFecha() != null)
+            cita.setFecha(dto.getFecha());
+        if (dto.getHora() != null)
+            cita.setHora(dto.getHora());
+
+        return citaRepo.save(cita);
+    }
+
 }

@@ -26,7 +26,6 @@ export async function login(credentials) {
   return decoded;
 }
 
-// -------------------- REGISTER --------------------
 export async function register(form) {
   const response = await fetch(`${API_URL}/register`, {
     method: "POST",
@@ -39,7 +38,6 @@ export async function register(form) {
   return await response.json();
 }
 
-// -------------------- GET CURRENT USER --------------------
 export function getCurrentUser() {
   const token = localStorage.getItem("token");
   if (!token) return null;
@@ -60,13 +58,11 @@ export function getCurrentUser() {
   }
 }
 
-// -------------------- LOGOUT --------------------
 export function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user");
 }
 
-// -------------------- GET AUTH HEADERS --------------------
 export function authHeaders() {
   const token = localStorage.getItem("token");
   return token

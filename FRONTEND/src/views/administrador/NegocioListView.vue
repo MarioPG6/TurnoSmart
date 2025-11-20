@@ -17,7 +17,7 @@
             <th>Teléfono</th>
             <th>Dirección</th>
             <th>Horario</th>
-            <th class="text-center">Acciones</th> <!-- NUEVA COLUMNA -->
+            <th class="text-center">Acciones</th> 
           </tr>
         </thead>
 
@@ -84,7 +84,6 @@ function goCitas(id) {
 
 
 <style scoped>
-/* ----------- Mismos estilos que en Crear Negocio ----------- */
 
 .admin-container {
   background: #f5f8fc;
@@ -107,7 +106,6 @@ function goCitas(id) {
   box-shadow: 0px 2px 5px rgba(0,0,0,0.08);
 }
 
-/* ----- TABLA con tu estilo corporativo ----- */
 .styled-table {
   border-collapse: collapse;
   width: 100%;
@@ -130,7 +128,6 @@ function goCitas(id) {
   background: #f1f4fa;
 }
 
-/* Botones principales */
 .btn-primary {
   background-color: #fb8c00;
   color: white;
@@ -145,8 +142,6 @@ function goCitas(id) {
 .btn-primary:hover {
   background-color: #f57c00;
 }
-
-/* ----- BOTONES DENTRO DE LA TABLA ----- */
 .btn-edit {
   background-color: #1e88e5;
   color: white;

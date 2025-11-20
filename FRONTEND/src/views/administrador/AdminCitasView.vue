@@ -8,6 +8,7 @@
       <thead>
         <tr>
           <th>Cliente</th>
+          <th>Teléfono</th>
           <th>Fecha</th>
           <th>Hora</th>
           <th>Estado</th>
@@ -17,11 +18,10 @@
 
       <tbody>
         <tr v-for="cita in citas" :key="cita.id">
-         <td>{{ cita.cliente.firstname }} {{ cita.cliente.lastname }}</td>
+          <td>{{ cita.cliente.firstname }} {{ cita.cliente.lastname }}</td>
+          <td>{{ cita.cliente.phone }}</td>
           <td>{{ cita.fecha }}</td>
           <td>{{ cita.hora }}</td>
-
-          <!-- ESTADO -->
           <td>
             <select v-model="cita.estado" @change="actualizarEstado(cita)">
               <option value="PENDIENTE">PENDIENTE</option>
@@ -32,7 +32,6 @@
             </select>
           </td>
 
-          <!-- BOTÓN REPROGRAMAR -->
           <td>
             <button @click="abrirModal(cita)">Reprogramar</button>
           </td>
@@ -40,7 +39,6 @@
       </tbody>
     </table>
 
-    <!-- MODAL PARA REPROGRAMAR -->
     <div v-if="modal" class="modal">
       <div class="modal-content">
         <h3>Reprogramar Cita</h3>
@@ -134,42 +132,100 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  padding: 20px;
+  max-width: 850px;
+  margin: 0 auto;
+  margin-top: 40px;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 25px;
+  color: #003366;
+  font-size: 22px;
+  font-weight: bold;
 }
 
 .tabla {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
-.tabla th,
+.tabla th {
+  background: #eaeff8;
+  padding: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+
 .tabla td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.tabla tr:hover {
+  background: #f7faff;
+}
+
+select {
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 button {
-  padding: 6px 12px;
+  padding: 7px 15px;
+  background: #ff9900;
+  border: none;
+  border-radius: 6px;
+  color: white;
   cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
 }
 
+button:hover {
+  background: #cc7a00;
+}
+
+/* MODAL */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
 .modal-content {
-  background: #fff;
-  padding: 20px;
-  width: 350px;
-  border-radius: 8px;
+  background: #ffffff;
+  padding: 25px;
+  width: 380px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.modal-content h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #003366;
+}
+
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 12px;
 }
 
 .modal-actions {
@@ -179,7 +235,11 @@ button {
 }
 
 .cancel {
-  background: #ff4444;
-  color: white;
+  background: #e74c3c;
 }
+
+.cancel:hover {
+  background: #c0392b;
+}
+
 </style>

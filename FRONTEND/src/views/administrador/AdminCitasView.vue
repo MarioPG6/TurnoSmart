@@ -60,14 +60,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import {
   obtenerCitasPorNegocio,
   cambiarEstadoCita,
   editarCita
 } from "../../services/citaService.js";
 
-const negocioId = localStorage.getItem("negocioId");
+const negocioId = ref(localStorage.getItem("negocioId"));
 
 const citas = ref([]);
 const loading = ref(true);
@@ -80,9 +80,9 @@ const form = ref({
   hora: "",
 });
 
-// Cargar citas del negocio
+// 🔄 Cargar citas del negocio seleccionado
 async function cargarCitas() {
-  if (!negocioId) {
+  if (!negocioId.value) {
     console.error("❌ No hay negocioId en localStorage");
     loading.value = false;
     return;
@@ -91,7 +91,7 @@ async function cargarCitas() {
   loading.value = true;
 
   try {
-    citas.value = await obtenerCitasPorNegocio(negocioId);
+    citas.value = await obtenerCitasPorNegocio(negocioId.value);
   } catch (error) {
     console.error("❌ Error cargando citas:", error);
   }
@@ -99,7 +99,23 @@ async function cargarCitas() {
   loading.value = false;
 }
 
-// Abrir modal y precargar fecha/hora
+function onNegocioChange() {
+  negocioId.value = localStorage.getItem("negocioId");
+}
+
+onMounted(() => {
+  cargarCitas();
+  window.addEventListener("negocio-changed", onNegocioChange);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("negocio-changed", onNegocioChange);
+});
+
+watch(negocioId, () => {
+  cargarCitas();
+});
+
 function abrirModal(cita) {
   citaSeleccionada.value = cita;
   form.value.fecha = cita.fecha;
@@ -107,7 +123,7 @@ function abrirModal(cita) {
   modal.value = true;
 }
 
-// Guardar reprogramación usando editarCita()
+
 async function guardarReprogramacion() {
   await editarCita(citaSeleccionada.value.id, {
     fecha: form.value.fecha,
@@ -119,15 +135,11 @@ async function guardarReprogramacion() {
   await cargarCitas();
 }
 
-// Cambiar estado individual
 async function actualizarEstado(cita) {
   await cambiarEstadoCita(cita.id, cita.estado);
 }
-
-onMounted(() => {
-  cargarCitas();
-});
 </script>
+
 
 
 <style scoped>

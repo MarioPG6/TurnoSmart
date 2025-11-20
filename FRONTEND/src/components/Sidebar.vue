@@ -5,7 +5,7 @@
     <ul class="list">
       <!-- AUTENTICADO -->
       <template v-if="isAuthenticated">
-
+        
         <!-- CLIENTE -->
         <template v-if="userRole === 'CLIENTE'">
           <li><RouterLink to="/">Inicio</RouterLink></li>
@@ -22,7 +22,27 @@
         <template v-else-if="userRole === 'ADMINISTRADOR'">
           <li><RouterLink to="/">Inicio</RouterLink></li>
           <li><RouterLink to="/admin/negocios">Negocios</RouterLink></li>
-          <li><RouterLink to="/admin/citas">Citas Asignadas</RouterLink></li>
+
+          <!-- MENÚ DESPLEGABLE DE CITAS -->
+          <li class="dropdown">
+            <div class="dropdown-header" @click="toggleDropdown">
+              Citas por Negocio
+              <span class="arrow">{{ dropdownOpen ? "▲" : "▼" }}</span>
+            </div>
+
+            <ul v-if="dropdownOpen" class="dropdown-list">
+              <li 
+                v-for="neg in negociosAdmin"
+                :key="neg.id"
+                class="dropdown-item"
+              >
+                <!-- NUEVA LÓGICA: usar la misma función que en la tabla -->
+                <a href="#" @click.prevent="goCitasSidebar(neg.id)">
+                  {{ neg.nombreNegocio }}
+                </a>
+              </li>
+            </ul>
+          </li>
         </template>
       </template>
     </ul>
@@ -33,16 +53,30 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
 import { getCurrentUser } from "../services/authService.js";
+import { obtenerNegociosPorUsuario } from "@/services/negocioService.js";
 
 const router = useRouter();
 const isAuthenticated = ref(false);
 const userRole = ref(null);
+
+const dropdownOpen = ref(false);
+function toggleDropdown() {
+  dropdownOpen.value = !dropdownOpen.value;
+}
+
+const negociosAdmin = ref([]);
 
 async function applyAuth() {
   try {
     const u = await getCurrentUser();
     isAuthenticated.value = !!u;
     userRole.value = u?.role ?? null;
+
+    // Cargar negocios del admin
+    if (u && u.role === "ADMINISTRADOR") {
+      negociosAdmin.value = await obtenerNegociosPorUsuario(u.id);
+    }
+
   } catch {
     isAuthenticated.value = false;
     userRole.value = null;
@@ -75,6 +109,14 @@ function logout() {
   window.dispatchEvent(new Event("auth-changed"));
   router.push("/login");
 }
+
+function goCitasSidebar(id) {
+  localStorage.setItem("negocioId", id);
+  window.dispatchEvent(new Event("negocio-changed"));
+
+  router.push("/admin/citas");
+}
+
 </script>
 
 <style scoped>
@@ -143,5 +185,43 @@ a:hover {
 .logout-link:hover {
   color: var(--brand-orange);
   background: var(--hover-bg);
+}
+
+/* 🔽 Estilos Dropdown con naranja */
+.dropdown-header {
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--brand-orange);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.dropdown-header:hover {
+  background: #ff7300; /* naranja más fuerte */
+}
+
+.dropdown-list {
+  padding-left: 12px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dropdown-item a {
+  padding: 6px 8px;
+  background: rgba(251, 140, 0, 0.15); /* naranja suave */
+  border-left: 3px solid var(--brand-orange);
+  border-radius: 6px;
+}
+
+.dropdown-item a:hover {
+  background: rgba(251, 140, 0, 0.3);
+  color: white;
 }
 </style>

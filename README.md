@@ -8,14 +8,6 @@ Funcionalidades Principales
 
 Gestión de turnos: Creación, seguimiento y actualización del estado de turnos y citas.
 
-Monitoreo en tiempo real: Visualización del estado de los turnos activos.
-
-Panel administrativo: Gestión de usuarios y áreas de atención.
-
-Reportes: Información básica sobre turnos registrados.
-
-Notificaciones: Alertas simples sobre cambios en los estados de los turnos.
-
 Tecnologías Utilizadas
 
 Frontend: Vue.js con Vite

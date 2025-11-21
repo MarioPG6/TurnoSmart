@@ -1,4 +1,6 @@
-# Logs
+# ========================
+# LOGS
+# ========================
 logs
 *.log
 npm-debug.log*
@@ -7,16 +9,42 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-dist
-dist-ssr
+# ========================
+# FRONTEND (Vite + Vue)
+# ========================
+dist/
+dist-ssr/
 *.local
 node_modules/
-# Editor directories and files
-node_modules/
+.vite/
+
+# ========================
+# BACKEND (Spring Boot)
+# ========================
+target/
+*.jar
+*.war
+
+# ========================
+# EDITORES
+# ========================
+# VSCode
 .vscode/*
 !.vscode/extensions.json
-.idea
+
+# IntelliJ / IDEA
+.idea/
+*.iml
+
+# ========================
+# SISTEMA OPERATIVO
+# ========================
 .DS_Store
+Thumbs.db
+
+# ========================
+# OTROS
+# ========================
 *.suo
 *.ntvs*
 *.njsproj

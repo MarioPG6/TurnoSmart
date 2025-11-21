@@ -2,9 +2,17 @@
   <div class="container">
     <h2>Gestión de Citas del Negocio</h2>
 
+    <!-- BOTONES DE VISTA -->
+    <div class="view-buttons">
+      <button :class="{ active: vista === 'tabla' }" @click="vista = 'tabla'">Tabla</button>
+      <button :class="{ active: vista === 'calendario' }" @click="vista = 'calendario'">Calendario</button>
+    </div>
+
+    <!-- LOADING -->
     <div v-if="loading" class="loading">Cargando citas...</div>
 
-    <table v-else class="tabla">
+    <!-- VISTA TABLA -->
+    <table v-if="vista === 'tabla' && !loading" class="tabla">
       <thead>
         <tr>
           <th>Cliente</th>
@@ -31,7 +39,6 @@
               <option value="CANCELADA">CANCELADA</option>
             </select>
           </td>
-
           <td>
             <button @click="abrirModal(cita)">Reprogramar</button>
           </td>
@@ -39,6 +46,12 @@
       </tbody>
     </table>
 
+    <!-- VISTA CALENDARIO -->
+    <div v-if="vista === 'calendario' && !loading" class="calendar-container">
+      <FullCalendar :options="calendarOptions" />
+    </div>
+
+    <!-- MODAL -->
     <div v-if="modal" class="modal">
       <div class="modal-content">
         <h3>Reprogramar Cita</h3>
@@ -59,6 +72,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import {
@@ -66,6 +80,12 @@ import {
   cambiarEstadoCita,
   editarCita
 } from "../../services/citaService.js";
+
+import FullCalendar from "@fullcalendar/vue3";
+import dayGridPlugin from "@fullcalendar/daygrid";
+
+const vista = ref("tabla");
+
 
 const negocioId = ref(localStorage.getItem("negocioId"));
 
@@ -138,6 +158,22 @@ async function guardarReprogramacion() {
 async function actualizarEstado(cita) {
   await cambiarEstadoCita(cita.id, cita.estado);
 }
+
+const calendarOptions = ref({
+  plugins: [dayGridPlugin],
+  initialView: "dayGridMonth",
+  events: [], // se llenará después
+});
+
+// Actualizar eventos del calendario cuando cambian las citas
+watch(citas, () => {
+  calendarOptions.value.events = citas.value.map(c => ({
+    id: c.id,
+    title: `${c.cliente.firstname} ${c.cliente.lastname} - ${c.estado}`,
+    date: c.fecha,
+  }));
+});
+
 </script>
 
 
